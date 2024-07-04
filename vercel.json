@@ -2,55 +2,22 @@
     "version": 2,
     "builds": [
         {
-            "src": "index.js",
+            "src": "server.js",
             "use": "@vercel/node"
         }
     ],
     "routes": [
         {
-            "src": "/news_like/:id",
-            "dest": "/index.js",
-            "methods": [
-                "POST"
-            ]
+            "src": "/api/news_like/:id",
+            "dest": "server.js"
         },
         {
-            "src": "/news_dislike/:id",
-            "dest": "/index.js",
-            "methods": [
-                "POST"
-            ]
+            "src": "/api/news_dislike/:id",
+            "dest": "server.js"
         },
         {
             "src": "/(.*)",
-            "dest": "/index.js"
-        },
-        {
-            "src": "/login",
-            "dest": "/login",
-            "methods": [
-                "POST"
-            ]
-        },
-        {
-            "src": "/categories",
-            "dest": "/categories",
-            "methods": [
-                "POST",
-                "GET"
-            ]
-        },
-        {
-            "src": "/news",
-            "dest": "/news",
-            "methods": [
-                "POST",
-                "GET"
-            ]
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/index.js"
+            "dest": "server.js"
         }
-    ]
+    ],
 }
