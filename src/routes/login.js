@@ -1,7 +1,7 @@
 const express = require("express");
 const Admin = require("../models/admin.schema");
 const bcrypt = require("bcryptjs");
-const router = express.Router();
+const route = express.Router();
 const jwt = require('jsonwebtoken');
 const loginfunction = require("../midleweare/login");
 
@@ -70,4 +70,4 @@ router.post("/login", async (req, res) => {
     }
 })
 
-module.exports = router
+module.exports = route
