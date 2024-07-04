@@ -10,6 +10,18 @@
         {
             "src": "/(.*)",
             "dest": "index.js"
+        },
+        {
+            "src": "/categories",
+            "dest": "/src/routes/categories.js"
+        },
+        {
+            "src": "/news",
+            "dest": "/src/routes/news.js"
+        },
+        {
+            "src": "/login",
+            "dest": "/src/routes/login.js"
         }
     ]
 }
