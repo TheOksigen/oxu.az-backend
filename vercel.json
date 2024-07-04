@@ -6,21 +6,23 @@
             "use": "@vercel/node"
         }
     ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api/$1"
+        }
+    ],
     "routes": [
         {
-            "src": "/(.*)",
-            "dest": "index.js"
-        },
-        {
-            "src": "/categories",
+            "src": "/api/categories",
             "dest": "/src/routes/categories.js"
         },
         {
-            "src": "/news",
+            "src": "/api/news",
             "dest": "/src/routes/news.js"
         },
         {
-            "src": "/login",
+            "src": "/api/login",
             "dest": "/src/routes/login.js"
         }
     ]
