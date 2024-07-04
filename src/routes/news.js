@@ -43,9 +43,10 @@ route.post("/news_dislike/:id", async (req, res) => {
         const newsItem = await News.findById(id);
 
         if (!newsItem) {
-            return res.status(404).json({ message: "News article not found" });     }
+            return res.status(404).json({ message: "News article not found" });
+        }
 
-        
+
         newsItem.dislikes += 1;
         await newsItem.save();
 
@@ -64,5 +65,13 @@ route.get("/news", async (req, res) => {
         res.status(500).json({ message: "categorie not created", error })
     }
 })
-
+route.get("/news/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const id_news = await news.find({ _id: id }).populate("category_id")
+        res.status(200).json(id_news)
+    } catch (error) {
+        res.status(500).json({ message: "categorie not created", error })
+    }
+})
 module.exports = route
