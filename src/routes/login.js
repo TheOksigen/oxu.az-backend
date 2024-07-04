@@ -5,7 +5,7 @@ const route = express.Router();
 const jwt = require('jsonwebtoken');
 const loginfunction = require("../midleweare/login");
 
-router.post("/register", loginfunction, async (req, res) => {
+route.post("/register", loginfunction, async (req, res) => {
     try {
         const { login, password } = req.body;
 
@@ -38,7 +38,7 @@ router.post("/register", loginfunction, async (req, res) => {
 });
 
 
-router.post("/login", async (req, res) => {
+route.post("/login", async (req, res) => {
     try {
         const { login, password } = req.body
         const user = await Admin.findOne({ login })

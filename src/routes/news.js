@@ -15,7 +15,7 @@ route.post("/news", loginfunction, async (req, res) => {
 })
 
 
-router.post("/news_like/:id", async (req, res) => {
+route.post("/news_like/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -36,7 +36,7 @@ router.post("/news_like/:id", async (req, res) => {
     }
 });
 
-router.post("/news_dislike/:id", async (req, res) => {
+route.post("/news_dislike/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
