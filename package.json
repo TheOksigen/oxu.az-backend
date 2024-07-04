@@ -12,7 +12,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "a": "npm i \n npm run dev"
   },
   "keywords": [],
   "author": "",

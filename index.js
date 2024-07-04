@@ -1,6 +1,8 @@
 const express = require('express');
 const { default: mongoose } = require('mongoose');
 const app = express()
+const cors = require("cors")
+const port = process.env.PORT || 3000;
 //routers
 const categorieRoute = require("./src/routes/categories");
 const newsRoute = require("./src/routes/news");
@@ -8,7 +10,7 @@ const loginRoute = require("./src/routes/login");
 
 require("dotenv").config()
 app.use(express.json())
-const port = process.env.PORT || 3000;
+app.use(cors())
 async function connect() {
     try {
         mongoose.connect(process.env.MONGO_URI)
