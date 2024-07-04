@@ -1,23 +1,11 @@
 {
     "version": 2,
     "builds": [
-        {
-            "src": "server.js",
-            "use": "@vercel/node"
-        }
+      { "src": "index.js", "use": "@vercel/node" }
     ],
     "routes": [
-        {
-            "src": "/api/news_like/:id",
-            "dest": "server.js"
-        },
-        {
-            "src": "/api/news_dislike/:id",
-            "dest": "server.js"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "server.js"
-        }
-    ],
-}
+      { "src": "/api/news/*", "dest": "index.js" },
+      { "src": "/(.*)", "dest": "index.js" }
+    ]
+  }
+  
