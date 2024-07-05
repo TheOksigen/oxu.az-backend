@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require('express');
 const { default: mongoose } = require('mongoose');
 const app = express()
@@ -8,7 +9,7 @@ const categorieRoute = require("./src/routes/categories");
 const newsRoute = require("./src/routes/news");
 const loginRoute = require("./src/routes/login");
 
-require("dotenv").config()
+
 app.use(express.json())
 app.use(cors())
 async function connect() {
@@ -19,12 +20,12 @@ async function connect() {
         console.log("qosulmadi", error);
     }
 }
+connect()
 
 app.use("/", loginRoute)
 app.use("/", categorieRoute)
 app.use("/", newsRoute)
 
 app.listen(port, () => {
-    connect()
     console.log(port);
 })

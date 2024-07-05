@@ -1,77 +1,84 @@
-const express = require("express")
-const route = express.Router()
-const news = require("../models/news.schema")
-const loginfunction = require("../midleweare/login")
+const express = require("express");
+const router = express.Router()
+const News = require("../models/news.schema");
+const loginfunction = require("../midleweare/login");
 
-route.post("/news", loginfunction, async (req, res) => {
-    console.log(req.body);
+router.post("/news", loginfunction, async (req, res) => {
     try {
-        const newnews = new news(req.body)
-        await newnews.save()
-        res.status(201).json({ message: "categorie created", newnews })
+        const news_req = req.body;
+        const newNews = new News(news_req)
+        await newNews.save()
+        res.status(201).json({ message: "News Created has succses", newNews })
     } catch (error) {
-        res.status(500).json({ message: "categorie not created", error })
-    }
-})
-
-
-route.post("/news_like/:id", async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const newsItem = await News.findById(id);
-
-        if (!newsItem) {
-            return res.status(404).json({ message: "News article not found" });
-        }
-
-        // Increment the likes count
-        newsItem.likes += 1;
-        await newsItem.save();
-
-        res.status(200).json({ message: "News article liked", newsItem });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Failed to like news article", error });
+        res.status(500).json({ message: "News Created has not succses", error })
     }
 });
-
-route.post("/news_dislike/:id", async (req, res) => {
-    const { id } = req.params;
-
+router.get("/news/:page", async (req, res) => {
     try {
-        const newsItem = await News.findById(id);
-
-        if (!newsItem) {
-            return res.status(404).json({ message: "News article not found" });
-        }
-
-
-        newsItem.dislikes += 1;
-        await newsItem.save();
-
-        res.status(200).json({ message: "News article disliked", newsItem });
+        const page = parseInt(req.params.page);
+        const perPage = 10;
+        const skip = (page - 1) * perPage;
+        const newNews = await News.find().populate("category").skip(skip).limit(perPage);
+        res.status(201).json(newNews)
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Failed to dislike news article", error });
+        res.status(500).json({ message: "News not found", error })
     }
 });
-
-route.get("/news", async (req, res) => {
-    try {
-        const allnews = await news.find().populate("category_id")
-        res.status(200).json(allnews)
-    } catch (error) {
-        res.status(500).json({ message: "categorie not created", error })
-    }
-})
-route.get("/news/:id", async (req, res) => {
+router.get("/news/:id", async (req, res) => {
     try {
         const { id } = req.params
-        const id_news = await news.find({ _id: id }).populate("category_id")
-        res.status(200).json(id_news)
+        const news = News.find({ _id: id }).populate("category")
+        res.status(200).json(news)
     } catch (error) {
-        res.status(500).json({ message: "categorie not created", error })
+        res.send(404).json({ message: "news its not available", error })
+    }
+});
+router.patch("/news_like/:id", loginfunction, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedNews = await News.findByIdAndUpdate(id, { $inc: { like: 1 } }, { new: true });
+        if (!updatedNews) {
+            return res.status(404).json({ message: "News not found" });
+        }
+        res.status(201).json(updatedNews);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error });
+    }
+});
+router.patch("/news_dislike/:id", loginfunction, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedNews = await News.findByIdAndUpdate(id, { $inc: { dislike: 1 } }, { new: true });
+        if (!updatedNews) {
+            return res.status(404).json({ message: "News not found" });
+        }
+        res.status(201).json(updatedNews);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error });
     }
 })
-module.exports = route
+router.delete("/news/:id", loginfunction,  async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedNews = await News.deleteOne({ _id: id });
+
+        if (deletedNews.deletedCount === 0) {
+            return res.status(404).json({ message: "News not found" });
+        }
+
+        res.json({ message: "News deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete news", error });
+    }
+});
+router.get("news_by_categ/:id", (req, res) => {
+    try {
+        const { id } = req.params
+        const categNews = News.find({ category: id })
+        res.status(200).json(categNews)
+    } catch (error) {
+
+    }
+})
+
+module.exports = router;

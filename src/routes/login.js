@@ -8,22 +8,18 @@ const loginfunction = require("../midleweare/login");
 route.post("/register", loginfunction, async (req, res) => {
     try {
         const { login, password } = req.body;
-
-        // Check if the login already exists
+        
         const existingUser = await Admin.findOne({ login });
         if (existingUser) {
             return res.status(400).json({ error: "login address already exists", status: false });
         }
 
-        // If login does not exist, create a new user
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new Admin({ login, password: hashedPassword });
-        await newUser.save(); // Save the new user to the database
+        await newUser.save();
 
-        // Generate JWT token for the new user
         const token = jwt.sign({ userid: newUser._id }, process.env.JWT_TOKEN, { expiresIn: "99999999h" });
 
-        // Return success response with user details and token
         res.status(200).json({
             id: newUser._id,
             login: newUser.login,
