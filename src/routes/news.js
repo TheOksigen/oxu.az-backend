@@ -24,6 +24,14 @@ route.get("/news/:page", async (req, res) => {
         res.status(500).json({ message: "News not found", error })
     }
 });
+route.get("/news", async (req, res) => {
+    try {
+        const newNews = await News.find().populate("category")
+        res.status(201).json(newNews)
+    } catch (error) {
+        res.status(500).json({ message: "News not found", error })
+    }
+});
 route.get("/news/:id", async (req, res) => {
     try {
         const { id } = req.params
