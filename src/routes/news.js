@@ -18,7 +18,7 @@ route.get("/news/:page", async (req, res) => {
         const page = parseInt(req.params.page);
         const perPage = 10;
         const skip = (page - 1) * perPage;
-        const newNews = await News.find().populate("category").skip(skip).limit(perPage);
+        const newNews = await News.find().populate("categories").skip(skip).limit(perPage);
         res.status(201).json(newNews)
     } catch (error) {
         res.status(500).json({ message: "News not found", error })
@@ -26,7 +26,7 @@ route.get("/news/:page", async (req, res) => {
 });
 route.get("/news", async (req, res) => {
     try {
-        const newNews = await News.find().populate("category")
+        const newNews = await News.find().populate("categories")
         res.status(201).json(newNews)
     } catch (error) {
         res.status(500).json({ message: "News not found", error })
