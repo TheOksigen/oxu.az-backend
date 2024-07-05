@@ -1,7 +1,6 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
-
-const newsSchame = mongoose.Schema({
+const NewsSchema = mongoose.Schema({
     img: {
         type: String,
         required: true
@@ -12,7 +11,7 @@ const newsSchame = mongoose.Schema({
     },
     description: {
         type: String,
-        required: true,        
+        required: true
     },
     like: {
         type: Number,
@@ -26,10 +25,8 @@ const newsSchame = mongoose.Schema({
     },
     category_id: {
         type: mongoose.Types.ObjectId,
-        ref: "categories"
+        ref: "Category"
     }
+}, { timestamps: true });
 
-}, { timestamps: true })
-
-
-module.exports = mongoose.model("news", newsSchame)
+module.exports = mongoose.model("News", NewsSchema);

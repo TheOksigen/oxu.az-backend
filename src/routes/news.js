@@ -18,7 +18,7 @@ route.get("/news/:page", async (req, res) => {
         const page = parseInt(req.params.page);
         const perPage = 10;
         const skip = (page - 1) * perPage;
-        const newNews = await News.find().populate("categories").skip(skip).limit(perPage);
+        const newNews = await News.find().populate("category_id").skip(skip).limit(perPage);
         res.status(201).json(newNews)
     } catch (error) {
         res.status(500).json({ message: "News not found", error })
@@ -26,12 +26,15 @@ route.get("/news/:page", async (req, res) => {
 });
 route.get("/news", async (req, res) => {
     try {
-        const newNews = await News.find().populate("categories")
-        res.status(201).json(newNews)
+        const newNews = await News.find().populate("category_id");
+        res.status(200).json(newNews);
     } catch (error) {
-        res.status(500).json({ message: "News not found", error })
+        console.error(error);
+        res.status(500).json({ message: "News not found", error });
     }
 });
+
+
 route.get("/news/:id", async (req, res) => {
     try {
         const { id } = req.params
@@ -65,7 +68,7 @@ route.patch("/news_dislike/:id", loginfunction, async (req, res) => {
         res.status(500).json({ message: "Internal server error", error });
     }
 })
-route.delete("/news/:id", loginfunction,  async (req, res) => {
+route.delete("/news/:id", loginfunction, async (req, res) => {
     try {
         const { id } = req.params;
         const deletedNews = await News.deleteOne({ _id: id });
