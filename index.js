@@ -9,7 +9,6 @@ const categorieRoute = require("./src/routes/categories");
 const newsRoute = require("./src/routes/news");
 const loginRoute = require("./src/routes/login");
 
-
 app.use(express.json())
 app.use(cors())
 async function connect() {
@@ -21,11 +20,11 @@ async function connect() {
     }
 }
 connect()
-
 app.use("/", loginRoute)
 app.use("/", categorieRoute)
 app.use("/", newsRoute)
-
+// connect()
 app.listen(port, () => {
+    connect()
     console.log(port);
 })
