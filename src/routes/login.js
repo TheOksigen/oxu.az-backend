@@ -32,8 +32,6 @@ route.post("/register", loginfunction, async (req, res) => {
         res.status(500).json({ error: "Internal server error", status: false });
     }
 });
-
-
 route.post("/login", async (req, res) => {
     try {
         const { login, password } = req.body
