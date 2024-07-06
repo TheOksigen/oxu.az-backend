@@ -13,6 +13,7 @@ route.post("/news", loginfunction, async (req, res) => {
         res.status(500).json({ message: "News Created has not succses", error })
     }
 }); // succses
+
 route.get("/news_page/:page", async (req, res) => {
     try {
         const page = parseInt(req.params.page);
@@ -24,6 +25,7 @@ route.get("/news_page/:page", async (req, res) => {
         res.status(500).json({ message: "News not found", error })
     }
 }); // succses
+
 route.get("/news", async (req, res) => {
     try {
         const newNews = await News.find().populate("category_id");
@@ -33,6 +35,7 @@ route.get("/news", async (req, res) => {
         res.status(500).json({ message: "News not found", error });
     }
 }); // succses
+
 route.get("/news/search", async (req, res) => {
     try {
         const { title } = req.query;
@@ -46,6 +49,7 @@ route.get("/news/search", async (req, res) => {
         res.status(500).json({ message: "Failed to search news", error });
     }
 });  // succses
+
 route.get("/news/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -58,6 +62,7 @@ route.get("/news/:id", async (req, res) => {
         res.status(500).json({ message: "Failed to retrieve news", error });
     }
 }); // succses
+
 route.patch("/news_like/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -70,6 +75,7 @@ route.patch("/news_like/:id", async (req, res) => {
         res.status(500).json({ message: "Internal server error", error });
     }
 });  // succses
+
 route.patch("/news_dislike/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -82,6 +88,7 @@ route.patch("/news_dislike/:id", async (req, res) => {
         res.status(500).json({ message: "Internal server error", error });
     }
 })  // succses
+
 route.patch("/news_view/:id", async (req, res) => {
     try {
         const { id } = req.params
@@ -94,6 +101,7 @@ route.patch("/news_view/:id", async (req, res) => {
         res.status(500).json({ message: "Internal server error", error })
     }
 }) // succses
+
 route.delete("/news/:id", loginfunction, async (req, res) => {
     try {
         const { id } = req.params;
@@ -108,6 +116,7 @@ route.delete("/news/:id", loginfunction, async (req, res) => {
         res.status(500).json({ message: "Failed to delete news", error });
     }
 }); // succses
+
 route.get("/news_by_categ/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -120,6 +129,7 @@ route.get("/news_by_categ/:id", async (req, res) => {
         res.status(500).json({ message: "Failed to fetch news by category", error });
     }
 }); // succses
+
 route.get("/news_viewed", async (req, res) => {
     try {
         const mostViewedNews = await News.find().sort({ view: -1 }).limit(10);
@@ -129,5 +139,6 @@ route.get("/news_viewed", async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
+
 
 module.exports = route;
