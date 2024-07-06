@@ -22,4 +22,18 @@ route.get("/categories", async (req, res) => {
     }
 })
 
+route.delete("/categories/:id", loginfunction, async (req, res) => {
+    try {
+        const { id } = req.params
+        const deletetCategories = await categories.deleteOne({ _id: id })
+        if (deletetCategories.deletedCount === 0) {
+            return res.status(404).json({ message: "Categories not found" });
+        }
+
+        res.json({ message: "categories deleted successfully", deletetCategories });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete categories", error });
+    }
+})
+
 module.exports = route
