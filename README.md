@@ -1,4 +1,5 @@
 To document your API endpoints in Postman for the provided Express.js routes, you can create a collection with detailed requests and responses. Here’s how you can document each endpoint effectively:
+## DOCS - https://www.notion.so/Oxu-az-backend-api-docs-8c8e5b796cac48cb9164d0b19a205cf0
 
 [**https://oxuaz.yetim.me](https://oxuaz.yetim.me/news) — link**
 
