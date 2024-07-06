@@ -26,7 +26,12 @@ const NewsSchema = mongoose.Schema({
     category_id: {
         type: mongoose.Types.ObjectId,
         ref: "Category"
+    }, 
+    view: {
+        type: Number,
+        default: 0
     }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("News", NewsSchema);
