@@ -1,4 +1,5 @@
-## [DOCS](https://www.notion.so/Oxu-az-backend-api-docs-8c8e5b796cac48cb9164d0b19a205cf0)
+To document your API endpoints in Postman for the provided Express.js routes, you can create a collection with detailed requests and responses. Here’s how you can document each endpoint effectively:
+
 [**https://oxuaz.yetim.me](https://oxuaz.yetim.me/news) — link**
 
 ### FrontEnd Documentation
@@ -471,7 +472,7 @@ In the body of the request, you can include the fields you want to update. Make 
 {
 		"img": "img.url"
     "title": "Updated News Title",
-    "content": "Updated content of the news article.",
+    "description": "Updated content of the news article.",
     "category_id": "60d5f484f8e7ae0017a2e57e"
 }
 ```
@@ -486,7 +487,7 @@ In the body of the request, you can include the fields you want to update. Make 
     "updatedNews": {
         "_id": "60d5f484f8e7ae0017a2e57e",
         "title": "Updated News Title",
-        "content": "Updated content of the news article.",
+        "description": "Updated content of the news article.",
         "category_id": "60d5f484f8e7ae0017a2e57e",
         "like": 0,
         "dislike": 0,
@@ -529,7 +530,7 @@ Or if there is a server error:
         {
             "_id": "60d5f484f8e7ae0017a2e57e",
             "title": "Sample News Title 1",
-            "content": "Content of the news article 1.",
+            "description": "Content of the news article 1.",
             "category_id": {
                 "_id": "60d5f484f8e7ae0017a2e57f",
                 "name": "Category Name 1"
@@ -543,7 +544,7 @@ Or if there is a server error:
         {
             "_id": "60d5f485f8e7ae0017a2e580",
             "title": "Sample News Title 2",
-            "content": "Content of the news article 2.",
+            "description": "Content of the news article 2.",
             "category_id": {
                 "_id": "60d5f486f8e7ae0017a2e581",
                 "name": "Category Name 2"
