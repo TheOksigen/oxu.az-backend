@@ -1,4 +1,3 @@
-To document your API endpoints in Postman for the provided Express.js routes, you can create a collection with detailed requests and responses. Here’s how you can document each endpoint effectively:
 ## [DOCS](https://www.notion.so/Oxu-az-backend-api-docs-8c8e5b796cac48cb9164d0b19a205cf0)
 [**https://oxuaz.yetim.me](https://oxuaz.yetim.me/news) — link**
 
@@ -407,7 +406,7 @@ To document your API endpoints in Postman for the provided Express.js routes, yo
 
 ### 10. N**ews Search**
 
-**Endpoint:** GET `/news/sear?title=NumuneXeberadi(inputunadi)`
+**Endpoint:** GET `/news/search?title=NumuneXeberadi(inputunadi)`
 
 - **Description:** Geting most viewsed news, limit 10
 - **Expected Response:**
@@ -456,11 +455,126 @@ To document your API endpoints in Postman for the provided Express.js routes, yo
         ```
         
 
----
+### 12. Update News
 
----
+- **Method**: PATCH
+- **URL**: `news/:id` (replace `:id` with the actual ID of the news item you want to update)
+- **Headers**:
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer YOUR_JWT_TOKEN` (if your `loginfunction` middleware requires a JWT token for authentication)
+
+### Request Body
+
+In the body of the request, you can include the fields you want to update. Make sure to use raw JSON format. Here's an example:
+
+```json
+{
+		"img": "img.url"
+    "title": "Updated News Title",
+    "content": "Updated content of the news article.",
+    "category_id": "60d5f484f8e7ae0017a2e57e"
+}
+```
+
+### Example Response
+
+- If the news item is successfully updated, you should receive a response similar to:
+
+```json
+{
+    "message": "News updated successfully",
+    "updatedNews": {
+        "_id": "60d5f484f8e7ae0017a2e57e",
+        "title": "Updated News Title",
+        "content": "Updated content of the news article.",
+        "category_id": "60d5f484f8e7ae0017a2e57e",
+        "like": 0,
+        "dislike": 0,
+        "view": 0,
+        "createdAt": "2021-06-25T14:30:44.000Z",
+        "updatedAt": "2021-06-25T14:35:44.000Z"
+    }
+}
+
+```
+
+- If there is an error (e.g., the news item is not found), you might receive a response like:
+
+```json
+{
+    "message": "News not found"
+}
+
+```
+
+Or if there is a server error:
+
+```json
+{
+    "message": "Failed to update news",
+    "error": "Detailed error message here"
+}
+
+```
+
+### 13. Get Most Viewed News
+
+- **Endpoint:** `GET /news/most_viewed`
+- **Description:** Retrieves the top 10 most viewed news articles sorted by the number of views in descending order.
+- **Parameters:** None
+- **Expected Response:**
+    
+    ```json
+    [
+        {
+            "_id": "60d5f484f8e7ae0017a2e57e",
+            "title": "Sample News Title 1",
+            "content": "Content of the news article 1.",
+            "category_id": {
+                "_id": "60d5f484f8e7ae0017a2e57f",
+                "name": "Category Name 1"
+            },
+            "like": 10,
+            "dislike": 2,
+            "view": 100,
+            "createdAt": "2021-06-25T14:30:44.000Z",
+            "updatedAt": "2021-06-25T14:35:44.000Z"
+        },
+        {
+            "_id": "60d5f485f8e7ae0017a2e580",
+            "title": "Sample News Title 2",
+            "content": "Content of the news article 2.",
+            "category_id": {
+                "_id": "60d5f486f8e7ae0017a2e581",
+                "name": "Category Name 2"
+            },
+            "like": 8,
+            "dislike": 1,
+            "view": 95,
+            "createdAt": "2021-06-24T12:25:40.000Z",
+            "updatedAt": "2021-06-24T12:30:40.000Z"
+        },
+        // 8 more news articles...
+    ]
+    
+    ```
+    
+- **Error Responses:**
+    - `500 Internal Server Error`
+        
+        ```json
+        {
+            "message": "Server error"
+        }
+        
+        ```
+        
 
 ## **Category**
+
+---
+
+---
 
 ### 1. **Create Category**
 
