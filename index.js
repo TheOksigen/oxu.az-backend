@@ -8,9 +8,11 @@ const port = process.env.PORT || 3000;
 const categorieRoute = require("./src/routes/categories");
 const newsRoute = require("./src/routes/news");
 const loginRoute = require("./src/routes/login");
-
+const { upload, deleteImage } = require("./src/midleweare/upload");
+const loginfunction = require("./src/midleweare/login");
 app.use(express.json())
 app.use(cors())
+
 async function connect() {
     try {
         mongoose.connect(process.env.MONGO_URI)
@@ -23,7 +25,10 @@ connect()
 app.use("/", loginRoute)
 app.use("/", categorieRoute)
 app.use("/", newsRoute)
-
+app.post("/img",  upload.single("img"), (req, res) => {
+    res.send({ img_url: req.file.location });
+})
+app.delete("/img/:filename", loginfunction, deleteImage)
 app.listen(port, () => {
     connect()
     console.log(port);
