@@ -108,6 +108,109 @@ To document your API endpoints in Postman for the provided Express.js routes, yo
 
 ---
 
+## **Image Upload and Deletion API Documentation**
+
+### **1. Image Upload**
+
+**Endpoint:**
+
+- **URL:** `/img`
+- **Method:** `POST`
+- **Description:** This endpoint allows you to upload an image file to the server. After a successful upload, it returns the URL where the image is stored.
+
+**Request:**
+
+- **Headers:**
+    - `Content-Type: multipart/form-data`
+    - `Authorization: Bearer <your-jwt-token>`
+- **Body:**
+    - **Field:** `img` (This is the key for the image file in the form data)
+    - **Type:** `File`
+    - **Description:** The image file to be uploaded.
+
+**Response:**
+
+- **Status Code:** `200 OK`
+- **Body:**
+    
+    ```json
+    {
+      "img_url": "<https://your-bucket-url/path-to-image>"
+    }
+    
+    ```
+    
+    - **img_url:** The URL of the uploaded image.
+
+**Example in JavaScript:**
+
+```jsx
+const formData = new FormData();
+formData.append('img', fileInput.files[0]);
+
+fetch('/img', {
+  method: 'POST',
+  body: formData,
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Image URL:', data.img_url);
+  })
+  .catch(error => {
+    console.error('Error uploading image:', error);
+  });
+
+```
+
+---
+
+### **2. Image Deletion**
+
+**Endpoint:**
+
+- **URL:** `/img/:filename`
+- **Method:** `DELETE`
+- **Description:** This endpoint allows you to delete an image from the server by specifying the image filename.
+
+**Request:**
+
+- **Headers:**
+    - `Authorization: Bearer <your-jwt-token>`
+- **URL Parameters:**
+    - `:filename` - The name of the image file you want to delete.
+
+**Response:**
+
+- **Status Code:** `200 OK`
+- **Body:** A confirmation message or status indicating the image was successfully deleted.
+
+**Example in JavaScript:**
+
+```jsx
+const filename = 'image-to-delete.jpg'; // Replace with the actual filename
+const token = 'your-jwt-token'; // Replace with your JWT token
+
+fetch(`/img/${filename}`, {
+  method: 'DELETE',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+  },
+})
+  .then(response => {
+    if (response.ok) {
+      console.log('Image deleted successfully');
+    } else {
+      console.error('Failed to delete image');
+    }
+  })
+  .catch(error => {
+    console.error('Error deleting image:', error);
+  });
+
+```
+
+---
+
 ## News
 
 ### 1. **Create News**
