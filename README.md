@@ -1,6 +1,6 @@
 To document your API endpoints in Postman for the provided Express.js routes, you can create a collection with detailed requests and responses. Here’s how you can document each endpoint effectively:
 
-[**https://oxuaz.yetim.me](https://oxuaz.davidhtml.xyz/news) — link**
+[**https://oxuaz.davidhtml.xyz](https://oxuaz.davidhtml.xyz/news) — link**
 
 ### FrontEnd Documentation
 
