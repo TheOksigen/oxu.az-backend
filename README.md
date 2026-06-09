@@ -1,785 +1,223 @@
-To document your API endpoints in Postman for the provided Express.js routes, you can create a collection with detailed requests and responses. Here’s how you can document each endpoint effectively:
+# Oxu.az Backend
 
-[**https://oxuaz.davidhtml.xyz](https://oxuaz.davidhtml.xyz/news) — link**
+Express + MongoDB backend for news, categories, admin auth and S3 image uploads.
 
-### FrontEnd Documentation
+## Run
 
-### 1. **Register New Admin**
-
-- **Endpoint:** POST `/register`
-- **Description:** Registers a new admin user.
-- **Headers:**
-    - `Content-Type: application/json`
-    - `Authorization: Bearer {{token}}` (if using JWT for authentication) !!!!!!
-- **Body:**
-    
-    ```json
-    {
-      "login": "admin@example.com",
-      "password": "adminpassword"
-    }
-    
-    ```
-    
-- **Expected Response:**
-    
-    ```json
-    {
-      "id": "admin_id",
-      "login": "admin@example.com",
-      "status": true,
-      "token": "generated_jwt_token"
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `400 Bad Request`
-        
-        ```json
-        {
-          "error": "Login address already exists",
-          "status": false
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "error": "Internal server error",
-          "status": false
-        }
-        
-        ```
-        
-
-### 2. **Admin Login**
-
-- **Endpoint:** POST `/login`
-- **Description:** Logs in an admin user.
-- **Headers:**
-    - `Content-Type: application/json`
-- **Body:**
-    
-    ```json
-    {  
-       "login": "david123",  
-       "password": "1234"
-    }
-    ```
-    
-- **Expected Response:**
-    
-    ```json
-    {
-      "id": "admin_id",
-      "login": "admin@example.com",
-      "status": true,
-      "token": "generated_jwt_token"
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `401 Unauthorized`
-        
-        ```json
-        {
-          "error": "Incorrect login or password",
-          "status": false
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "error": "Internal server error",
-          "status": false
-        }
-        
-        ```
-        
-
----
-
----
-
-## **Image Upload and Deletion API Documentation**
-
-### **1. Image Upload**
-
-**Endpoint:**
-
-- **URL:** `/img`
-- **Method:** `POST`
-- **Description:** This endpoint allows you to upload an image file to the server. After a successful upload, it returns the URL where the image is stored.
-
-**Request:**
-
-- **Headers:**
-    - `Content-Type: multipart/form-data`
-    - `Authorization: Bearer <your-jwt-token>`
-- **Body:**
-    - **Field:** `img` (This is the key for the image file in the form data)
-    - **Type:** `File`
-    - **Description:** The image file to be uploaded.
-
-**Response:**
-
-- **Status Code:** `200 OK`
-- **Body:**
-    
-    ```json
-    {
-      "img_url": "<https://your-bucket-url/path-to-image>"
-    }
-    
-    ```
-    
-    - **img_url:** The URL of the uploaded image.
-
-**Example in JavaScript:**
-
-```jsx
-const formData = new FormData();
-formData.append('img', fileInput.files[0]);
-
-fetch('/img', {
-  method: 'POST',
-  body: formData,
-})
-  .then(response => response.json())
-  .then(data => {
-    console.log('Image URL:', data.img_url);
-  })
-  .catch(error => {
-    console.error('Error uploading image:', error);
-  });
-
+```bash
+bun install
+bun run dev
 ```
 
----
+Required `.env` values:
 
-### **2. Image Deletion**
-
-**Endpoint:**
-
-- **URL:** `/img/:filename`
-- **Method:** `DELETE`
-- **Description:** This endpoint allows you to delete an image from the server by specifying the image filename.
-
-**Request:**
-
-- **Headers:**
-    - `Authorization: Bearer <your-jwt-token>`
-- **URL Parameters:**
-    - `:filename` - The name of the image file you want to delete.
-
-**Response:**
-
-- **Status Code:** `200 OK`
-- **Body:** A confirmation message or status indicating the image was successfully deleted.
-
-**Example in JavaScript:**
-
-```jsx
-const filename = 'image-to-delete.jpg'; // Replace with the actual filename
-const token = 'your-jwt-token'; // Replace with your JWT token
-
-fetch(`/img/${filename}`, {
-  method: 'DELETE',
-  headers: {
-    'Authorization': `Bearer ${token}`,
-  },
-})
-  .then(response => {
-    if (response.ok) {
-      console.log('Image deleted successfully');
-    } else {
-      console.error('Failed to delete image');
-    }
-  })
-  .catch(error => {
-    console.error('Error deleting image:', error);
-  });
-
+```env
+PORT=3000
+MONGO_URI=
+JWT_TOKEN=
+AWS_REGION=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 ```
 
----
+## API Docs
+
+Scalar API reference:
+
+```text
+GET /docs
+```
+
+OpenAPI JSON:
+
+```text
+GET /openapi.json
+```
+
+## Auth
+
+Protected endpoints require:
+
+```http
+Authorization: Bearer <token>
+```
+
+### Login
+
+```http
+POST /login
+Content-Type: application/json
+```
+
+```json
+{
+  "login": "admin",
+  "password": "password"
+}
+```
+
+### Register Admin
+
+```http
+POST /register
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+```json
+{
+  "login": "admin",
+  "password": "password"
+}
+```
+
+### Verify Token
+
+```http
+GET /verify
+Authorization: Bearer <token>
+```
 
 ## News
 
-### 1. **Create News**
+### List News
 
-- **Endpoint:** POST `/news`
-- **Description:** Creates a new news item.
-- **Headers:**
-    - `Content-Type: application/json`
-    - `Authorization: Bearer {{token}}` (if using JWT for authentication)
-- **Body:**
-    
-    ```json
-    {
-      "img": "URL_to_image", // base64 elemeyin ele oxuaz saytindan linki goturun
-      "title": "News Title",
-      "description": "News Description",
-      "category_id": "category_id"  // MongoDB ObjectId of the category
-    }
-    
-    ```
-    
-- **Expected Response:**
-    
-    ```json
-    {
-      "message": "News Created successfully",
-      "newNews": {
-        // Newly created news item object
-      }
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "News Created has not succses",
-          "error": {}
-        }
-        
-        ```
-        
+```http
+GET /news?page=1&limit=10&sort=newest
+```
 
-### 2. **Get Paginated News**
+Query params:
 
-- **Endpoint:** GET `/news_page/:page`
-- **Description:** Retrieves paginated news items. limit 10
-- **Parameters:**
-    - `page: integer` (e.g., `/news/1` for the first page)
-- **Expected Response:**
-    
-    ```json
-    [
-      // Array of news items
-    ]
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "News not found",
-          "error": {}
-        }
-        
-        ```
-        
+- `page`: default `1`
+- `limit`: default `10`, max `50`
+- `search`: searches `title` and `description`
+- `category_id`: filters by category id
+- `sort`: `newest`, `oldest`, `most_viewed`, `most_liked`
 
-### 3. **Get All News**
-
-- **Endpoint:** GET `/news`
-- **Description:** Retrieves all news items. limit no
-- **Expected Response:**
-    
-    ```json
-    [
-      // Array of news items 
-      // isletmeyi meslehet gormurem
-    ]
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "News not found",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 4. **Get News by ID**
-
-- **Endpoint:** GET `/news/:id`
-- **Description:** Retrieves a news item by its ID.
-- **Parameters:**
-    - `id: string` (e.g., `/news/615b62f3e820731ec49283d1`)
-- **Expected Response:**
-    
-    ```json
-    {
-      // Single news item object
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "news its not available",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 5. **Like News**
-
-- **Endpoint:** PATCH `/news_like/:id`
-- **Description:** Increments the like count of a news item by its ID.
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    {
-      // Updated news item object with incremented like count
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "News not found"
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Internal server error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 6. **Dislike News**
-
-- **Endpoint:** PATCH `/news_dislike/:id`
-- **Description:** Increments the dislike count of a news item by its ID.
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    {
-      // Updated news item object with incremented dislike count
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "News not found"
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Internal server error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 7. **Delete News**
-
-- **Endpoint:** DELETE `/news/:id`
-- **Description:** Deletes a news item by its ID.
-- `Authorization: Bearer {{token}}` (if using JWT for authentication)
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    {
-      "message": "News deleted successfully"
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "News not found"
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Failed to delete news",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 8. **Get News by Category ID**
-
-- **Endpoint:** GET `/news_by_categ/:id`
-- **Description:** Retrieves news items belonging to a specific category.
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    [
-      // Array of news items
-    ]
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Internal server error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 9. Views **News**
-
-- **Endpoint:** PATCH `/news_view/:id`
-- **Description:** Retrieves news items belonging to a specific category.
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    {
-      // Updated news item object with incremented dislike count
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "News not found"
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Internal server error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 10. N**ews Search**
-
-**Endpoint:** GET `/news/search?title=NumuneXeberadi(inputunadi)`
-
-- **Description:** Geting most viewsed news, limit 10
-- **Expected Response:**
-    
-    ```json
-    {
-      //  news items arraylar 
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "Server Error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 11. **Get most vieaw**
-
-- **Endpoint:** GET `/news_viewed`
-- **Description:** Geting most viewsed news, limit 10
-- **Expected Response:**
-    
-    ```json
-    {
-      //  news items arraylar 
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "Server Error",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 12. Update News
-
-- **Method**: PATCH
-- **URL**: `news/:id` (replace `:id` with the actual ID of the news item you want to update)
-- **Headers**:
-    - `Content-Type`: `application/json`
-    - `Authorization`: `Bearer YOUR_JWT_TOKEN` (if your `loginfunction` middleware requires a JWT token for authentication)
-
-### Request Body
-
-In the body of the request, you can include the fields you want to update. Make sure to use raw JSON format. Here's an example:
+Response:
 
 ```json
 {
-		"img": "img.url"
-    "title": "Updated News Title",
-    "description": "Updated content of the news article.",
-    "category_id": "60d5f484f8e7ae0017a2e57e"
+  "data": [],
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 0,
+    "totalPages": 0,
+    "hasNextPage": false,
+    "hasPrevPage": false
+  }
 }
 ```
 
-### Example Response
+Legacy pagination endpoint still works:
 
-- If the news item is successfully updated, you should receive a response similar to:
+```http
+GET /news_page/1?limit=10
+```
+
+### Search News
+
+```http
+GET /news/search?title=test&page=1&limit=10
+```
+
+### News By Category
+
+```http
+GET /news_by_categ/:id?page=1&limit=10
+```
+
+### Most Viewed News
+
+```http
+GET /news_viewed?limit=10
+```
+
+### Get News By ID
+
+```http
+GET /news/:id
+```
+
+### Create News
+
+```http
+POST /news
+Authorization: Bearer <token>
+Content-Type: application/json
+```
 
 ```json
 {
-    "message": "News updated successfully",
-    "updatedNews": {
-        "_id": "60d5f484f8e7ae0017a2e57e",
-        "title": "Updated News Title",
-        "description": "Updated content of the news article.",
-        "category_id": "60d5f484f8e7ae0017a2e57e",
-        "like": 0,
-        "dislike": 0,
-        "view": 0,
-        "createdAt": "2021-06-25T14:30:44.000Z",
-        "updatedAt": "2021-06-25T14:35:44.000Z"
-    }
+  "img": "https://example.com/image.jpg",
+  "title": "News title",
+  "description": "News description",
+  "category_id": "665f0f1b8f4f3c0012b34567"
 }
-
 ```
 
-- If there is an error (e.g., the news item is not found), you might receive a response like:
+### Update News
+
+```http
+PATCH /news/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+### Delete News
+
+```http
+DELETE /news/:id
+Authorization: Bearer <token>
+```
+
+### Counters
+
+```http
+PATCH /news_like/:id
+PATCH /news_dislike/:id
+PATCH /news_view/:id
+```
+
+## Categories
+
+```http
+GET /categories
+```
+
+```http
+POST /categories
+Authorization: Bearer <token>
+Content-Type: application/json
+```
 
 ```json
 {
-    "message": "News not found"
+  "name": "Siyaset"
 }
-
 ```
 
-Or if there is a server error:
-
-```json
-{
-    "message": "Failed to update news",
-    "error": "Detailed error message here"
-}
-
+```http
+DELETE /categories/:id
+Authorization: Bearer <token>
 ```
 
-### 13. Get Most Viewed News
+## Images
 
-- **Endpoint:** `GET /news/most_viewed`
-- **Description:** Retrieves the top 10 most viewed news articles sorted by the number of views in descending order.
-- **Parameters:** None
-- **Expected Response:**
-    
-    ```json
-    [
-        {
-            "_id": "60d5f484f8e7ae0017a2e57e",
-            "title": "Sample News Title 1",
-            "description": "Content of the news article 1.",
-            "category_id": {
-                "_id": "60d5f484f8e7ae0017a2e57f",
-                "name": "Category Name 1"
-            },
-            "like": 10,
-            "dislike": 2,
-            "view": 100,
-            "createdAt": "2021-06-25T14:30:44.000Z",
-            "updatedAt": "2021-06-25T14:35:44.000Z"
-        },
-        {
-            "_id": "60d5f485f8e7ae0017a2e580",
-            "title": "Sample News Title 2",
-            "description": "Content of the news article 2.",
-            "category_id": {
-                "_id": "60d5f486f8e7ae0017a2e581",
-                "name": "Category Name 2"
-            },
-            "like": 8,
-            "dislike": 1,
-            "view": 95,
-            "createdAt": "2021-06-24T12:25:40.000Z",
-            "updatedAt": "2021-06-24T12:30:40.000Z"
-        },
-        // 8 more news articles...
-    ]
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-            "message": "Server error"
-        }
-        
-        ```
-        
+```http
+POST /img
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+```
 
-## **Category**
+Form field:
 
----
+```text
+img
+```
 
----
-
-### 1. **Create Category**
-
-- **Endpoint:** POST `/categories`
-- **Description:** Creates a new category.
-- **Headers:**
-    - `Content-Type: application/json`
-    - `Authorization: Bearer {{token}}` (if using JWT for authentication)
-- **Body:**
-    
-    ```json
-    {
-      "name": "Category Name"
-    }
-    
-    ```
-    
-- **Expected Response:**
-    
-    ```json
-    {
-      "message": "Category created",
-      "newcategories": {
-        // Newly created category object
-      }
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Category not created",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 2. **Get All Categories**
-
-- **Endpoint:** GET `/categories`
-- **Description:** Retrieves all categories.
-- **Expected Response:**
-    
-    ```json
-    [
-      // Array of category objects
-    ]
-    
-    ```
-    
-- **Error Responses:**
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Categories not found",
-          "error": {}
-        }
-        
-        ```
-        
-
-### 3. **Delete Categories**
-
-- **Endpoint:** DELETE `/categories/:id`
-- **Description:** Deletes a categories item by its ID.
-- `Authorization: Bearer {{token}}` (if using JWT for authentication)
-- **Parameters:**
-    - `id: string`
-- **Expected Response:**
-    
-    ```json
-    {
-      "message": "Categories deleted successfully"
-    }
-    
-    ```
-    
-- **Error Responses:**
-    - `404 Not Found`
-        
-        ```json
-        {
-          "message": "Categories not found"
-        }
-        
-        ```
-        
-    - `500 Internal Server Error`
-        
-        ```json
-        {
-          "message": "Failed to delete news",
-          "error": {}
-        }
-        
-        ```
-        
-
-### filmin sonu
+```http
+DELETE /img/:filename
+Authorization: Bearer <token>
+```

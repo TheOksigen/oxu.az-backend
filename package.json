@@ -16,7 +16,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "bun --watch index.js",
+    "start": "bun index.js",
+    "build": "bun build index.js --target bun --outdir dist",
     "a": "npm i \n npm run dev"
   },
   "keywords": [],

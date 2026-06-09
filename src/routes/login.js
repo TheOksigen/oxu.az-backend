@@ -44,14 +44,10 @@ route.post("/login", async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Sef login ve ya sifre", status: false })
         } else if (user && isPasswordValid) {
-            console.log(user._id);
-
             const token = jwt.sign({ userid: user._id }, process.env.JWT_TOKEN, { expiresIn: "99999999h" })
 
-
-            console.log("Saalm");
             res.status(200).json({
-                id: user.__id,
+                id: user._id,
                 login: user.login,
                 status: true,
                 token
@@ -61,6 +57,7 @@ route.post("/login", async (req, res) => {
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: "Internal server error", status: false });
     }
 })
 
