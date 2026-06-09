@@ -1,5 +1,3 @@
-providers = ["bun"]
-
 [phases.install]
 cmds = ["bun install --frozen-lockfile"]
 
